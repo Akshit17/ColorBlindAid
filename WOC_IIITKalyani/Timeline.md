@@ -4,7 +4,7 @@
 
 --> Decide the structure of application
 
---> Figure out algorithm to use 
+--> Figure out which algorithm to use 
 
 --> Learn using python libraries(numpy, matplotlib, OpenCv ) , building api's with python  
 
