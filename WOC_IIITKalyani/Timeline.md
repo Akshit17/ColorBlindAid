@@ -11,5 +11,7 @@
 
 # Week 2
 
---> Start implementing ofte used numpy, matplotlib , Opencv syntaxes 
+--> Start implementing often used numpy, matplotlib , Opencv syntaxes 
+
+-->
 
