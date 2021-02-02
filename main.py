@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 import cv2
 import numpy as np
 
-# import uvicorn   not needed?
+import uvicorn  # not needed?
 
 app = FastAPI()  # calling FastAPI class from fastapi
 
@@ -17,9 +17,13 @@ async def root(x=2, y=9):
  return x + y
 
 
-@app.post("/")
-def main():
-    return StreamingResponse(frame)
+@app.post("/api/predict")
+def stream_frame(file: Uploadfile = File(...)):
+    {
+          image = livestremc(file)
+
+    }
+    #return StreamingResponse(frame)
 
 
 while True:
