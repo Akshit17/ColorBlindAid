@@ -1,24 +1,40 @@
+# import fastapi   this does not work
 
-#import fastapi   #this does not work
+from fastapi import FastAPI  # this works
+from fastapi.responses import StreamingResponse
+import cv2
+import numpy as np
 
-from fastapi import FastAPI   #this works
-import uvicorn
+# import uvicorn   not needed?
+
+app = FastAPI()  # calling FastAPI class from fastapi
+
+cap = cv2.VideoCapture(0)
 
 
-app = FastAPI()         #calling FastAPI class from fastapi
+@app.get("/urlname")  # "urlname" added after / for unique address
+async def root(x=2, y=9):
+ return x + y
 
 
-@app.get('/urlname')         # "urlname" added after / for unique address
+@app.post("/")
+def main():
+    return StreamingResponse(frame)
 
 
-async def root (x=2 , y=9) :
- return x+y 
+while True:
+    ret, frame = cap.read()
+    cv2.imshow('Name.png', frame)
 
-def root2 (m=2 , n=9) :
- return m+n
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("Grayed", gray)
 
-#print (x+y)
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+# waits for one second to take any keyboard key input , in this case 'q' only allowed
+# release the camera capture cap so if a new camera capture cap2 is created then it can takeover
+cap.release()
+cv2.destroyAllWindows()
 
-#if __name__  == "__main__":
- #   uvicorn.run(app,port=8000,host='0.0.0.0')
- 
+# if __name__  == "__main__":
+# uvicorn.run(app,port=8000,host='0.0.0.0')
