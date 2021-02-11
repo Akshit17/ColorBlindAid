@@ -1,44 +1,35 @@
 # import fastapi   this does not work
 
-from fastapi import FastAPI  # this works
-from fastapi.responses import StreamingResponse
+from flask import Flask, render_template, Response  # this works
+
 import cv2
 import numpy as np
 
-import uvicorn  # not needed?
-
-app = FastAPI()  # calling FastAPI class from fastapi
+app = Flask(__name__)  # calling FastAPI class from fastapi
 
 cap = cv2.VideoCapture(0)
 
 
-@app.get("/urlname")  # "urlname" added after / for unique address
-async def root(x=2, y=9):
- return x + y
+def gen_frames():
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode(".jpg", frame)
+            frame = buffer.tobytes()
+            yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n")
 
 
-@app.post("/api/predict")
-def stream_frame(file: Uploadfile = File(...)):
-    {
-          image = livestremc(file)
-
-    }
-    #return StreamingResponse(frame)
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 
-while True:
-    ret, frame = cap.read()
-    cv2.imshow('Name.png', frame)
+@app.route("/video_feed")
+def video_feed():
+    return Response(gen_frames, mimetype="multipart/x-mixed-replace; boundary=frame")
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    cv2.imshow("Grayed", gray)
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
-# waits for one second to take any keyboard key input , in this case 'q' only allowed
-# release the camera capture cap so if a new camera capture cap2 is created then it can takeover
-cap.release()
-cv2.destroyAllWindows()
-
-# if __name__  == "__main__":
-# uvicorn.run(app,port=8000,host='0.0.0.0')
+if __name__ == "__main__":
+    app.run(debug=True)
