@@ -76,7 +76,7 @@ def normalise(editablePhoto, rowx, coly):
 
 # Simulating for protanopes
 def ConvertToProtanopes(editablePhoto, rowx, coly):
-    protanopeConvert = np.array([[0, 2.02344, -2.52581], [0, 1, 0], [0, 0, 1]])
+    protanopeConvert = np.array([[0, 2.02344, -2.52581], [0, 1, 0], [0, 0, 1]])  #correction array for protonopia
     editablePhoto = getImageArray(protanopeConvert, editablePhoto, rowx, coly)
     NormalPhoto = normalise(editablePhoto, rowx, coly)
     return NormalPhoto
@@ -84,7 +84,7 @@ def ConvertToProtanopes(editablePhoto, rowx, coly):
 
 # Simulating Deutranopia
 def ConvertToDeuteranopes(editablePhoto, sizeX, sizeY):
-    DeuteranopesConvert = numpy.array([[1, 0, 0], [0.494207, 0, 1.24827], [0, 0, 1]])
+    DeuteranopesConvert = numpy.array([[1, 0, 0], [0.494207, 0, 1.24827], [0, 0, 1]])  #correction array for deutranopia
     editablePhoto = getImageArray(DeuteranopesConvert, editablePhoto, sizeX, sizeY)
     NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
     return NormalPhoto
@@ -92,7 +92,7 @@ def ConvertToDeuteranopes(editablePhoto, sizeX, sizeY):
 
 # Simulating Tritanopia
 def ConvertToTritanope(editablePhoto, sizeX, sizeY):
-    TritanopeConvert = numpy.array([[1, 0, 0], [0, 1, 0], [-0.395913, 0.801109, 0]])
+    TritanopeConvert = numpy.array([[1, 0, 0], [0, 1, 0], [-0.395913, 0.801109, 0]])   #correction array for tritanopia
     editablePhoto = getImageArray(TritanopeConvert, editablePhoto, sizeX, sizeY)
     NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
     return NormalPhoto
