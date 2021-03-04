@@ -40,31 +40,87 @@ def tolms(frame, rowx, coly):
     NormalPhoto = normalise(editablePhoto, rowx, coly)
     return NormalPhoto
 
-def convertToRGB(editablePhoto,rowx,coly):
-	rgb2lms = numpy.array([[17.8824,43.5161,4.11935],[3.45565,27.1554,3.86714],[0.0299566,0.184309,1.46709]])
-	RGBConvert = numpy.linalg.inv(rgb2lms)
-	#print(RGBConvert)
-	editablePhoto = getImageArray(RGBConvert, editablePhoto, sizeX, sizeY)
-	for i in range(0,rowx):
-		for j in range(0,coly):
-			for k in range(0,3):
-				editablePhoto[i,j,k]=((editablePhoto[i,j,k]))*255
 
-	NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
-	return NormalPhoto
+def convertToRGB(editablePhoto, rowx, coly):
+    rgb2lms = numpy.array(
+        [
+            [17.8824, 43.5161, 4.11935],
+            [3.45565, 27.1554, 3.86714],
+            [0.0299566, 0.184309, 1.46709],
+        ]
+    )
+    RGBConvert = numpy.linalg.inv(rgb2lms)
+    # print(RGBConvert)
+    editablePhoto = getImageArray(RGBConvert, editablePhoto, sizeX, sizeY)
+    for i in range(0, rowx):
+        for j in range(0, coly):
+            for k in range(0, 3):
+                editablePhoto[i, j, k] = ((editablePhoto[i, j, k])) * 255
+
+    NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
+    return NormalPhoto
 
 
-def normalise(editablePhoto,rowx,coly):
-	NormalPhoto =  np.zeros((rowx,coly,3),'float')
-	x = rowx-1
-	y = coly
-	for i in range(0,rowx):
-		for j in range(0,coly):
-			for k in range(0,3):
-				NormalPhoto[x,j,k]=editablePhoto[i,j,k]
-		x=x-1
+def normalise(editablePhoto, rowx, coly):
+    NormalPhoto = np.zeros((rowx, coly, 3), "float")
+    x = rowx - 1
+    y = coly
+    for i in range(0, rowx):
+        for j in range(0, coly):
+            for k in range(0, 3):
+                NormalPhoto[x, j, k] = editablePhoto[i, j, k]
+        x = x - 1
 
-	return NormalPhoto
+    return NormalPhoto
+
+
+# Simulating for protanopes
+def ConvertToProtanopes(editablePhoto, rowx, coly):
+    protanopeConvert = np.array([[0, 2.02344, -2.52581], [0, 1, 0], [0, 0, 1]])
+    editablePhoto = getImageArray(protanopeConvert, editablePhoto, rowx, coly)
+    NormalPhoto = normalise(editablePhoto, rowx, coly)
+    return NormalPhoto
+
+
+# Simulating Deutranopia
+def ConvertToDeuteranopes(editablePhoto, sizeX, sizeY):
+    DeuteranopesConvert = numpy.array([[1, 0, 0], [0.494207, 0, 1.24827], [0, 0, 1]])
+    editablePhoto = getImageArray(DeuteranopesConvert, editablePhoto, sizeX, sizeY)
+    NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
+    return NormalPhoto
+
+
+# Simulating Tritanopia
+def ConvertToTritanope(editablePhoto, sizeX, sizeY):
+    TritanopeConvert = numpy.array([[1, 0, 0], [0, 1, 0], [-0.395913, 0.801109, 0]])
+    editablePhoto = getImageArray(TritanopeConvert, editablePhoto, sizeX, sizeY)
+    NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
+    return NormalPhoto
+
+
+def arrayToImage(editablePhoto, sizeX, sizeY, saveAs):
+    rgbArray = np.zeros((sizeX, sizeY, 3), "uint8")
+    for i in range(0, sizeX):
+        for j in range(0, sizeY):
+            for k in range(0, 3):
+                rgbArray[i, j, k] = editablePhoto[i, j, k]
+    img = Image.fromarray(rgbArray)
+    img.save(saveAs)
+
+
+def daltonize(originalRgb, simRgb, sizeX, sizeY):
+    photo = originalRgb.load()
+    editablePhoto = np.zeros((sizeX, sizeY, 3), "float")
+    for i in range(0, sizeX):
+        for j in range(0, sizeY):
+            for k in range(0, 3):
+                editablePhoto[i, j, k] = photo[i, j][k]
+
+    diffPhoto = simRgb - editablePhoto
+    transMatrix = numpy.array([[0, 0, 0], [0.7, 1, 0], [0.7, 0, 1]])
+    errCorrection = getImageArray(transMatrix, diffPhoto, sizeX, sizeY)
+    finalImage = errCorrection + editablePhoto
+    return finalImage
 
 
 def main():
