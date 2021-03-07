@@ -109,8 +109,8 @@ def arrayToImage(editablePhoto, rowx, coly, saveAs):
         for j in range(0, coly):
             for k in range(0, 3):
                 rgbArray[i, j, k] = editablePhoto[i, j, k]
-    img = Image.fromarray(rgbArray)
-    img.save(saveAs)
+   # img = Image.fromarray(rgbArray)
+   # img.save(saveAs)                      Uncomment this is giving a single image as input to save the output image
 
 
 def daltonize(originalRgb, simRgb, rowx, coly):
