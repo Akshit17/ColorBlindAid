@@ -21,8 +21,8 @@ def tolms(frame, rowx, coly):
     photo = cv2.imread(frame)
     editablePhoto = np.zeros((rowx, coly, 3), "float")
 
-    for i in range(0, sizeX):
-        for j in range(0, sizeY):
+    for i in range(0, rowx):
+        for j in range(0, coly):
             for k in range(0, 3):
                 editablePhoto[i, j, k] = photo[i, j][k]
                 editablePhoto[i, j, k] = (editablePhoto[i, j, k]) / 255
@@ -94,12 +94,12 @@ def ConvertToDeuteranopes(editablePhoto, rowx, coly):
 
 
 # Simulating Tritanopia
-def ConvertToTritanope(editablePhoto, sizeX, sizeY):
+def ConvertToTritanope(editablePhoto, rowx, coly):
     TritanopeConvert = np.array(
         [[1, 0, 0], [0, 1, 0], [-0.395913, 0.801109, 0]]
     )  # correction filter array for tritanopia
-    editablePhoto = getImageArray(TritanopeConvert, editablePhoto, sizeX, sizeY)
-    NormalPhoto = normalise(editablePhoto, sizeX, sizeY)
+    editablePhoto = getImageArray(TritanopeConvert, editablePhoto, rowx, coly)
+    NormalPhoto = normalise(editablePhoto, rowx, coly)
     return NormalPhoto
 
 
